@@ -1,0 +1,287 @@
+{
+  "project": "Rogue2D: Dungeon Descent",
+  "version": "9.2",
+  "council_policy": {
+    "max_iterations_per_task": 3,
+    "require_100_percent_tests": true,
+    "auto_rollback_on_failure": true,
+    "token_budget_strategy": "zero_token_local_checks_and_diff_only_audit"
+  },
+  "current_task_id": "task_01_damage_numbers",
+  "tasks": [
+    {
+      "id": "task_01_damage_numbers",
+      "title": "Всплывающие цифры урона (Floating Combat Text)",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "COMBAT_FEEDBACK",
+      "description": "Добавить сочные всплывающие цифры урона при нанесении ударов мечом/клеймором и попадании стрел. Белые цифры для обычного удара, увеличенные золотые с восклицательным знаком для КРИТИЧЕСКОГО урона, рубиновые при получении урона игроком.",
+      "acceptance_criteria": [
+        "При нанесении урона врагу появляется всплывающий текст урона с плавной траекторией вверх и затуханием (fade-out)",
+        "Критический урон выделен золотым цветом (255, 215, 60), увеличенным шрифтом и символом '!'",
+        "Урон по игроку отображается рубиново-красным цветом",
+        "Все 109 существующих тестов продолжают проходить без ошибок",
+        "Производительность не проседает при скоплении 10+ врагов"
+      ],
+      "assigned_to": "engineer",
+      "iterations": 1,
+      "notes": "Overhauled DamageText with smooth floating arc physics (vx, vy, deceleration), crisp 2px drop-shadow, high-contrast white normal numbers, gold large crits with exclamation mark, ruby red damage on player, and zero duplicate text."
+    },
+    {
+      "id": "task_02_elite_enemy_shards",
+      "title": "Элитные враги и дроп Фиолетовых осколков",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "GAMEPLAY_ECONOMY",
+      "description": "Шанс 15% спавна элитного врага в Катакомбах (с фиолетовой рунической аурой, +50% HP и повышенным уроном). При гибели элитный враг гарантированно дропает 1-2 Фиолетовых осколка в постоянный профиль.",
+      "acceptance_criteria": [
+        "Элитные враги имеют визуальную подсветку ауры и префикс 'Древний' в имени",
+        "После победы над элитником выпадает подбираемый предмет 'Фиолетовый осколок' (астральная иконка)",
+        "Осколок сохраняется в persistent profile.json сразу при подборе",
+        "Все 109 тестов проходят успешно"
+      ],
+      "assigned_to": "designer",
+      "iterations": 0
+    },
+    {
+      "id": "task_03_forge_and_shop_sfx",
+      "title": "Аудио-обратная связь для кузницы и лавки",
+      "priority": "MEDIUM",
+      "status": "DONE",
+      "category": "AUDIO_POLISH",
+      "description": "Добавить звонкие металлические звуки наковальни при прокачке экипировки в BlacksmithModal и звон золотых монет при покупке товара в ShopModal.",
+      "acceptance_criteria": [
+        "При успешном апгрейде оружия кузнецом звучит удар молота по наковальне",
+        "При покупке в магазине звучит звон монет (sfx 'coin')",
+        "Звуки подчиняются настройкам громкости SFX и мастера",
+        "Все 109 тестов проходят успешно"
+      ],
+      "assigned_to": "engineer",
+      "iterations": 1,
+      "notes": "Synthesized anvil.wav with metallic chime & resonance decay, registered in sound_manager.py, updated BlacksmithModal._spark_sfx and verified ShopModal coin sfx on buy/sell with 100% test pass."
+    },
+    {
+      "id": "task_04_minimap_radar",
+      "title": "Тактический радар-миникарта катакомб",
+      "priority": "MEDIUM",
+      "status": "DONE",
+      "category": "UI_NAVIGATION",
+      "description": "В правом верхнем углу экрана (под полоской босса, если она есть) добавить готическую миникарту комнат текущего этажа с туманом войны (комнаты открываются по мере посещения).",
+      "acceptance_criteria": [
+        "Миникарта занимает не более 140x140 пикселей в правом верхнем углу",
+        "Неисследованные комнаты скрыты или отображаются смутными контурами",
+        "Отображаются иконки лестницы вниз, торговца и кузнеца в посещенных комнатах",
+        "Миникарта отключается по горячей клавише [M] или клику",
+        "Все 109 тестов проходят успешно"
+      ],
+      "assigned_to": "designer",
+      "iterations": 0
+    },
+    {
+      "id": "task_05_hero_anatomy_and_mob_visual_polish",
+      "title": "Анатомия героя (руки и латы), детализация мобов и плавность анимаций",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "GRAPHICAL_POLISH",
+      "description": "Восстановить анатомические бронированные руки и латные перчатки рыцаря (убрать обрубки на локтях) для всех 4 скинов. Детализировать спрайты и анимации Огненного Беса, Снежного Йети и Спорового Подрывника с богатой палитрой (30+ цветов). Исправить посох некроманта и вернуть аутентичную анимацию лучника. Сгладить переходы состояний в бою.",
+      "acceptance_criteria": [
+        "Модель игрока во всех 4 скинах (default, paladin, dark_knight, champion) имеет прорисованные предплечья и перчатки",
+        "Тест zero-deformation между idle и attack проходит без искажений",
+        "Спрайты Огненного Беса, Снежного Йети и Спорового Подрывника высоко детализированы с плавными переходами",
+        "Некромант держит аутентичный костяной посох с черепом и не застревает в анимации каста",
+        "Зомби, гоблин и таящаяся сохранены в идеальном исходном виде",
+        "100% тестов проходят успешно"
+      ],
+      "assigned_to": "engineer",
+      "iterations": 1,
+      "notes": "Fully restored player armored arms & gauntlets across all 4 skins; detailed imp, yeti, and spore bomber suites; smooth combat transitions in entities.py; 185 unit tests and council validator 100% passing."
+    },
+    {
+      "id": "task_06_aaa_lighting_bloom_and_ao",
+      "title": "Движок света: Fake Bloom, волюметрические лучи и Ambient Occlusion",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "ENGINE_LIGHTING",
+      "description": "Внедрить W//4 буфер Fake Bloom Pass для огня/магии/критов, косинусный спад волюметрических лучей и затенение стыков стен с полом (AO 4-6px).",
+      "assigned_to": "Rogue2D_3",
+      "iterations": 1,
+      "notes": "Implemented 60+ FPS Fake Bloom Pass (W//6 scratch buffer with bilinear threshold and BLEND_RGB_ADD), contact Ambient Occlusion (AO) on floor-wall junctions baked into tiles, Squash & Stretch (120% horizontal stretch, 84% height) and chromatic aberration Ghost Trails during dash, and sub-pixel exponential Camera Lerp (factor 0.14) in CameraGroup.custom_draw. 189 unit tests and council validator 100% passing."
+    },
+    {
+      "id": "task_07_aaa_ui_damage_burn_and_springs",
+      "title": "Интерфейс: Damage Burn Buffer (белый шлейф HP), Spring Easing окон и Crit Pop",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "UI_JUICE",
+      "description": "Добавить отстающий белый шлейф урона в полосках HP игрока и боссов, пружинные анимации всплытия модалок за 90мс и эффект увеличения цифр крита x1.5.",
+      "assigned_to": "Rogue2D_1",
+      "iterations": 1,
+      "notes": "Damage Burn Buffer in player HP bar (250ms amber-white lag trail), Spring Easing on modal windows (Forge, Shop, Equipment, Inspection at 90ms with 0.90 -> 1.05 -> 1.00 curve), Crit Pop effect on DamageText (x1.5 initial pulse + additive flash), and 9-slice gothic beveled frames."
+    },
+    {
+      "id": "task_08_aaa_contact_shadows_and_debris",
+      "title": "Мир и визуал: Каплевидные контактные тени, баллистические осколки и Hue-Shifting",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "ASSETS_WORLD",
+      "description": "Мягкие контактные эллипсы под ногами, физика отскакивающих осколков ящиков/костей с затуханием (коэфф 0.4) и приглушение контраста полов с холодными синими тенями.",
+      "assigned_to": "Rogue2D_2",
+      "iterations": 1,
+      "notes": "Dual-layer contact shadows (outer penumbra + inner umbra with 2.5D elevation), ballistic DebrisParticle with parabolic bouncing physics and 0.40 restitution coefficient, and floor-wall Ambient Occlusion."
+    },
+    {
+      "id": "task_09_aaa_sound_repositories_and_dynamic_audio",
+      "title": "Аудио-система: Репозитории звуков, акустический капельный резонанс и вариативность шагов",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "AUDIO_ARCHITECTURE",
+      "description": "Интеграция репозиториев (Kenney CC0, Sonniss GDC, Freesound), глубокий пещерный резонанс капель (water_drip.wav 0.85s с сетью ранних отражений), шаги латных сапог по камню (step.wav) и хруст обломков (debris_crunch.wav).",
+      "assigned_to": "Rogue2D_3",
+      "iterations": 1,
+      "notes": "Acoustic-modeled Minnaert bubble cavity synthesis with 5-tap reflection delay network for water_drip.wav; armored sabaton step with chainmail clink; multi-grain debris crunch."
+    },
+    {
+      "id": "task_10_aaa_serious_hero_model_and_skins",
+      "title": "Визуал: Редизайн СЕРЬЁЗНОГО героя и 4 готических скинов",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "GRAPHICAL_POLISH",
+      "description": "Полная замена мультяшного ведра на грозный готический шлем с узкой смотровой прорезью, ребристую кирасу с заклепками, массивные наплечники и латные сапоги для всех 4 скинов с сохранением Zero-Deformation гарантии.",
+      "assigned_to": "Rogue2D_3",
+      "iterations": 1,
+      "notes": "Full dark fantasy suite generated for player, paladin, dark_knight, champion. Silhouette diffs verified >35 (paladin: 56, dark_knight: 41, champion: 39). Zero-deformation 100% passing in test_4."
+    },
+    {
+      "id": "task_11_aaa_dialogue_bubbles_and_status_vfx",
+      "title": "Интерфейс: Контекстные диалоговые бабблы NPC и статусные индикаторы над врагами",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "UI_JUICE",
+      "description": "Всплывающие пиксельные реплики кузнеца и торговца при приближении, анимированные мини-индикаторы горения, заморозки и кровотечения над хитбоксами мобов.",
+      "assigned_to": "Rogue2D_1",
+      "iterations": 1,
+      "notes": "Implemented NPCDialogueBubble with 9-slice dark slate frame, metallic border, corner rivets, downward pointer notch, and 110ms spring overshoot (0.85 -> 1.05 -> 1.00); contextual dialogue triggers for Kelvin & Rodrik; status effect engine (burn, chill with 45% speed reduction, bleed) and micro animated status badges with zero-tofu rendering."
+    },
+    {
+      "id": "task_12_aaa_environmental_mist_and_flame_wind",
+      "title": "Мир: Стелющаяся дымка подземелья (Ground Mist) и ветровая реакция факелов",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "ASSETS_WORLD",
+      "description": "Многослойный параллакс стелющейся по полу полупрозрачной дымки/тумана в склепах и реакция факелов на рывок героя (колебание языков пламени от потока воздуха).",
+      "assigned_to": "Rogue2D_2",
+      "iterations": 1,
+      "notes": "GroundMist dynamic biome floor fog with player dash aerodynamic dispersal; interactive torch wind flinch with spring damping and embers."
+    },
+    {
+      "id": "task_13_aaa_hit_recoil_and_directional_sparks",
+      "title": "Боевой сок: Векторные искры парирования, отдача мобов (Hit Recoil) и стоп-кадры",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "COMBAT_PHYSICS",
+      "description": "Импульсная деформация врагов вдоль угла удара (Hit Squash), сноп искр строго по нормали лезвия меча и динамический микро-фриз (40мс) при критических ударах тяжелым оружием.",
+      "assigned_to": "Rogue2D_3",
+      "iterations": 1,
+      "notes": "Vectorial hit recoil & dynamic squash deformation along impact normal; blade normal tangential sparks; 40ms micro-freeze hit-stop."
+    },
+    {
+      "id": "task_14_aaa_paperdoll_gear_and_menu",
+      "title": "Интерфейс: AAA Кукла снаряжения (Paperdoll) и Главное меню",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "UI_JUICE",
+      "description": "Полноэкранная интерактивная кукла персонажа вместо 6 блоков, анатомические сокеты, радар статов, карточки редкости, готические кнопки меню и настройки.",
+      "assigned_to": "Rogue2D_1",
+      "iterations": 1,
+      "notes": "Full-screen interactive Paperdoll suite implemented: animated hero breathing on runic pedestal, 6 anatomical carved gear sockets, 6-attribute Stat Radar Hexagon with guide polygons & glowing vertices, 16-slot backpack grid, interactive hover comparison tooltips with green/red stat deltas, and 3-tab Gothic settings menu (Video, Audio, Controls) with brass chevrons and mechanical feedback."
+    },
+    {
+      "id": "task_15_aaa_item_textures_and_cards",
+      "title": "Предметы: AAA текстуры оружия, брони, реликвий и инвентаря",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "ASSETS_ITEMS",
+      "description": "Перерисовка всех предметов на AAA уровень сочных пикселей (металлические блики, камни, свечение), новые предметы (молот, коса, рапира, реликвии).",
+      "assigned_to": "Rogue2D_1",
+      "iterations": 1,
+      "notes": "All 19 item sprites overhauled with specular multi-tone gradient ramps, precious gemstones and runic engravings. 5 new items integrated into catalogues and random drop generator: Warhammer Crusher, Reaper Scythe, Dueling Rapier, Mimic Fang, and Void Elixir."
+    },
+    {
+      "id": "task_16_dungeon_floor_diversity_and_altars",
+      "title": "Мир: Процедурное разнообразие 8 плиток пола и 3 AAA Алтаря",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "WORLD_GEN",
+      "description": "8 вариаций плиток пола (трещины, мох, лужи, кровь) для устранения монотонности + Кровавый алтарь, Источник мудрости, Горн наковальни.",
+      "assigned_to": "Rogue2D_2",
+      "iterations": 1,
+      "notes": "Generated 8 procedural floor tile variations (var1-var8) for dungeon & crypt; created WisdomFountain (+100% MP, +75 XP) and AnvilShrine (+4 weapon damage); gothic interaction pills with dynamic colors."
+    },
+    {
+      "id": "task_17_ten_new_mobs_and_mimic",
+      "title": "Бестиарий: 10 новых мобов, Мимик и физика рассыпания костей",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "MOBS_AI",
+      "description": "Мимик (сундук с зубами и языком), Горгулья, Культист, Лавовая гончая, Баньши, Саркофаг и др. + рассыпание скелетов на кости при гибели.",
+      "assigned_to": "Rogue2D_2",
+      "iterations": 1,
+      "notes": "Generated sprite suites and AI behaviors for 10 new mobs (mimic, gargoyle, mosquito, cultist, skeleton_brute, spore_creeper, banshee, lava_hound, sarcophagus, iron_maiden); physical skeleton death bone shatter debris; preserved taboo mobs 100%."
+    },
+    {
+      "id": "task_18_fix_dev_mode_crash_and_archer_bow",
+      "title": "Багфикс: Ликвидация краша в Dev Mode и второго лука лучника",
+      "priority": "CRITICAL",
+      "status": "DONE",
+      "category": "ENGINE_STABILITY",
+      "description": "ShowcaseEntity полный боевой протокол и защита от огненного шлейфа + удаление наложения второго лука в анимациях скелета-лучника.",
+      "assigned_to": "Rogue2D_3",
+      "iterations": 1,
+      "notes": "ShowcaseEntity full Enemy protocol and source protection added; Skeleton aim/attack duplicate idle bow erased."
+    },
+    {
+      "id": "task_19_four_hero_archetypes_68px_in_dev_mode",
+      "title": "Герой: 4 прототипа ростом 68-74px на постаментах в Dev Mode",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "HERO_MODELS",
+      "description": "Увеличение масштаба с 48px до 68-74px (канон Dead Cells): Истребитель, Странник, Крестоносец и Ретро-чемпион с живым выбором в Dev Mode.",
+      "assigned_to": "Rogue2D_3",
+      "iterations": 1,
+      "notes": "4 distinct hero archetypes (Slayer 70px, Wanderer 66px, Crusader 74px, Champion Redux 60px) generated at native 64x80 scale with idle, walk, attack, dash animations; interactive Dev Room pedestals with [E] selection and midbottom grounding."
+    },
+    {
+      "id": "task_20_separate_weapon_and_dead_cells_strike",
+      "title": "Боёвка: Отдельный слой оружия и 3D-to-2D удар с серповидным шлейфом",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "COMBAT_ANIMATION",
+      "description": "Оружие как независимый рендер-слой, замах (70мс), рассечение 180° с плазменно-стальным шлейфом (Crescent Smear), инерционный возврат.",
+      "assigned_to": "Rogue2D_3",
+      "iterations": 1,
+      "notes": "Weapon overhauled with 3-phase strike pipeline (70ms windup, 180 deg crescent smear mesh with cutting bevel, recovery) + real 3D-to-2D steel blade rendering and dynamic depth sorting (in front / behind)."
+    },
+    {
+      "id": "task_21_fps_optimization_and_pleasant_footsteps",
+      "title": "Производительность: Оптимизация 60+ FPS и мягкие приятные шаги",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "PERFORMANCE_AUDIO",
+      "description": "Кэширование факелов и блума для стабильных 60 FPS + удаление пищащих 2400Гц синусоид, мягкий глухой акустический шаг 85-105Гц (Round-Robin 4 вариации).",
+      "assigned_to": "Rogue2D_3",
+      "iterations": 1,
+      "notes": "Torch halos and player lantern pre-cached, bloom buffer interleaved for solid 60 FPS; pleasant acoustic heel-toe foley steps synthesized with round-robin."
+    },
+    {
+      "id": "task_22_dash_glowing_flame_and_level_milestones",
+      "title": "Динамика: Светящийся шлейф дэша и вехи Level-Up (каждые 5 уровней)",
+      "priority": "HIGH",
+      "status": "DONE",
+      "category": "VFX_LIGHTING",
+      "description": "Пламя дэша излучает аддитивный свет на окружение, эволюция цвета пламени и столпа уровня (Золото -> Лазурь -> Аметист -> Рубин) с колокольным звуком.",
+      "assigned_to": "Rogue2D_3",
+      "iterations": 1,
+      "notes": "Dash flame hazard casts real additive light onto dungeon floors and walls; Level-Up VFX and dash flames evolve across 4 milestones (Lv 1-4 Amber, Lv 5-9 Azure, Lv 10-14 Amethyst, Lv 15+ Crimson) with cathedral chime audio."
+    }
+  ]
+}

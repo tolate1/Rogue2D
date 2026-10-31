@@ -1,0 +1,103 @@
+# Rogue2D: Technical Design Document (game.txt)
+
+## 1. Executive Summary
+**Project Name**: Rogue2D
+**Genre**: 2D Roguelike / Dungeon Crawler
+**Target Platform**: PC (Standalone Executable)
+**Tech Stack**: Python 3.11 + Pygame 2.6.1 (Strict Pygame, NO external engines)
+**Core Concept**: A procedural dungeon crawler where the player (Knight) fights through endless levels of enemies, collects loot, upgrades skills, customizes gear at the blacksmith, and defeats massive bosses every 5th floor.
+
+## 2. Technical Architecture
+The codebase adheres to Object-Oriented Programming (OOP) principles, organized into modular components.
+
+### 2.1 File Structure
+*   `main.py`: Entry point. Manages the global Game Loop and State Machine.
+*   `src/settings.py`: Configuration constants (Resolution, Colors, FPS).
+*   `src/utils.py`: Asset loading (Images, Sounds) with memory caching.
+*   `src/map_manager.py`: World generation, Camera logic, Autotiling, Biome management.
+*   `src/entities.py`: `Player`, `Enemy`, `Weapon`, `EnemyProjectile`, and Particle systems.
+*   `src/items.py`: Equipment items, Run Relics, Substats generation, Chest, and Destructibles.
+*   `src/ui.py`: Heads-Up Display (HUD), EquipmentModal, ItemInspectModal, ShopModal, BlacksmithModal.
+*   `src/sound_manager.py`: Professional Kenney CC0 combat and ambient audio manager.
+*   `src/save_manager.py`: Deterministic save and persistence system.
+
+### 2.2 Game Logic & State Machine
+The game operates on a Finite State Machine (FSM) to manage flow:
+*   **Menu**: Start / Settings / Exit.
+*   **Game**: Main gameplay loop (Update/Draw entities).
+*   **Pause**: Overlay menu with Resume / Settings / Quit.
+*   **Modals**: EquipmentModal, ItemInspectModal, ShopModal, BlacksmithModal.
+
+---
+
+## 3. Game World & Level Design
+### 3.1 Procedural Generation
+*   **Algorithm**: Multi-room BSP and connected corridor generator.
+*   **Structure**:
+    *   **Floors (Walkable)**: Connected open spaces with 4 aesthetic autotile variations (`var1`..`var4`).
+    *   **Walls (Collidable)**: Surrounding the floors with contextual autotiling (`top`, `front`, `bottom`, `side_left`, `side_right`).
+*   **Infinite Progression**:
+    *   Player finds **Stairs** to proceed to `Floor N+1`.
+    *   Requires explicit interaction (`[E]` or `[ENTER]`) to prevent accidental transitions.
+
+### 3.2 Biomes (7 Unique Dungeon Atmospheres)
+*   **Dungeon (Catacombs)**: Classical dark stone tileset with torch sconces.
+*   **Crypt (Necropolis)**: Dark basalt slate with turquoise soul-fissures and sarcophagi.
+*   **Fungal (Toxic Depths)**: Mossy swamp stone with glowing purple mushrooms and acid puddle hazards.
+*   **Void (Astral Rift)**: Cosmic obsidian tiles with golden constellation runes.
+*   **Forest (Forgotten Gardens)**: Overgrown stone walls with climbing green ivy.
+*   **Ice (Glacial Caverns)**: Crystalline blue ice walls and slick floors.
+*   **Volcano (Magma Core)**: Scorched obsidian masonry with ember fissures.
+
+### 3.3 Interactive Objects & Hazards
+*   **Chests**: Randomly spawned. Weapon strikes or walk collision open them -> drops loot and relics.
+*   **Breakables (Boxes & Barrels)**: Destructible props blocking paths. Yield gold and potions.
+*   **Trader (Merchant)**: Atmospheric shop with wooden awning, candles, and catalog shelves.
+*   **Blacksmith (Forge)**: Glowing forge hearth, anvil, hammer strike animation, and stat upgrade previews.
+*   **Acid Puddles**: Toxic ground pools in Fungal biomes that slow movement and deal damage.
+
+---
+
+## 4. Gameplay Mechanics & RPG Systems
+### 4.1 Player Character (The Knight)
+*   **Movement**: WASD (with footbox collision separation and smooth sliding).
+*   **Combat Archetypes**:
+    *   **Sword**: Fast balanced slash (90 deg arc, 36 reach).
+    *   **Claymore**: Heavy sweeping cleave (160 deg arc, 48 reach, high knockback).
+    *   **Spear**: Long-reach piercing thrust (45 deg cone, 58 reach, lines up hits).
+    *   **Daggers**: Twin flurry rapid slashes (110 ms cycle, +12% crit rate bonus).
+*   **Skills**:
+    *   **Dash (Key Z)**: Fast directional burst (boosted by Zephyr Feather relic).
+    *   **Shield (Key X)**: Invulnerability barrier for 3 seconds. Unlocks at Level 5.
+    *   **Ultimate (Key C)**: Massive radial shockwave around player. Unlocks at Level 15.
+
+### 4.2 RPG Systems (Genshin / Resonance Gear)
+*   **Main Stat**: Primary characteristic with guaranteed linear growth on upgrade.
+*   **Substats**: 4 distinct substats (Crit Rate, Crit Dmg, Atk Speed, Speed, Defense, HP).
+*   **Run Relics**: Powerful passive artifacts found in chests:
+    *   **Vampiric Fang**: Heals upon critical hits and monster kills.
+    *   **Zephyr Feather**: +35% dash distance and invulnerability to projectiles during dash.
+    *   **Midas Crown**: +60% gold drops and gold sparkle explosions.
+    *   **Obsidian Heart**: Defies death! Absorbs a fatal blow, restoring health and shielding the hero.
+*   **Item Inspection UX**:
+    *   Equipment slots show only clean icons, rarity frames, names, and upgrade levels.
+    *   Detailed statistics, main stats, substats, and lore open exclusively in the **ItemInspectModal** popup card upon clicking the item.
+    *   Universal closing: all modals close via `[ESCAPE]`, `[I]`, `[TAB]`, `[C]`, `[X]` corner button, or clicking outside the window (Backdrop Click).
+
+### 4.3 Bestiary & Bosses
+*   **Zombie**: Aggressive melee chaser with lunge acceleration.
+*   **Skeleton (Archer)**: Ranged kiter with backstep recoil.
+*   **Goblin**: Fast, nimble melee attacker.
+*   **Imp**: Fast flying fire projectile shooter.
+*   **Lurker**: Stealthy, high-burst melee predator.
+*   **Yeti**: High-HP glacial tank.
+*   **Bat**: Flying erratic swarm enemy.
+*   **Necromancer**: Dark mage that kites the player, fires homing soul skulls, and summons skeleton minions.
+*   **Spore Bomber**: Fast runner that initiates a 1-second warning detonation telegraph before exploding in an AOE burst.
+*   **Toxic Slime**: Gelatinous slug that splits into two mini slimes upon defeat.
+*   **Phantom**: Ethereal wraith that floats through walls and periodically becomes invulnerable.
+*   **Bosses (Every 5 Floors)**:
+    *   **Bone Golem** (Floor 2): Heavy stomper with shockwaves.
+    *   **Frost Revenant** (Floor 4): Glacial barrage and ice freeze.
+    *   **Void Knight** (Floor 5): Void greatsword cleave and enraged projectile spirals.
+    *   **Necro Lord** (Floor 10): 3-phase crypt grandmaster with scythe cleaves, teleportation, and 12-skull radial circles.
